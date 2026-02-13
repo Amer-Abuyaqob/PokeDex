@@ -1,0 +1,19 @@
+{
+  "name": "pokedex",
+  "version": "1.0.0",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "node dist/main.js",
+    "dev": "npx tsc && node dist/main.js"
+  },
+  "keywords": [],
+  "author": "Amer Abuyaqob",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^25.2.3",
+    "typescript": "^5.9.3"
+  }
+}
