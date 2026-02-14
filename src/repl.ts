@@ -13,8 +13,9 @@ import { stdin, stdout } from "node:process";
  * cleanInput("Charmander Bulbasaur PIKACHU") // ["charmander", "bulbasaur", "pikachu"]
  */
 export function cleanInput(input: string): string[] {
-  // TODO: error handling for input (empty string)
   input = input.trim().toLowerCase();
+  // Empty string split by \s+ in JS yields [""], not []. Return [] so isEmptyInput works.
+  if (input === "") return [];
   // \s+ splits on one-or-more whitespace (avoids empty strings from multiple spaces)
   return input.split(/\s+/);
 }
