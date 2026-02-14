@@ -12,5 +12,6 @@
 export function cleanInput(input: string): string[] {
   // TODO: error handling for input (empty string)
   input = input.trim().toLowerCase();
-  return input.split(" ");
+  // \s+ splits on one-or-more whitespace (avoids empty strings from multiple spaces)
+  return input.split(/\s+/);
 }
