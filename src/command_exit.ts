@@ -1,4 +1,4 @@
-import { CLICommand } from "./command";
+import { CLICommand } from "./command.js";
 
 /**
  * Exits the Pokedex REPL gracefully.

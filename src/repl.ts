@@ -1,7 +1,7 @@
 import { createInterface } from "node:readline";
 import { stdin, stdout } from "node:process";
-import { getCommands } from "./commands";
-import type { CLICommand } from "./command";
+import { getCommands } from "./commands.js";
+import type { CLICommand } from "./command.js";
 
 /**
  * Splits the user's input into words (by whitespace), lowercases it, and trims

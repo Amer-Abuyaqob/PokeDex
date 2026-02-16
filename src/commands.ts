@@ -1,5 +1,5 @@
-import { CLICommand } from "./command";
-import { commandExit } from "./command_exit";
+import { CLICommand } from "./command.js";
+import { commandExit } from "./command_exit.js";
 
 /**
  * Builds and returns the set of available Pokedex CLI commands.
