@@ -1,4 +1,4 @@
-import { CLICommand } from "./command.js";
+import type { CLICommand } from "./command.js";
 
 /**
  * Exits the Pokedex REPL gracefully.
@@ -14,6 +14,6 @@ export function commandExit(
   _args: string[],
   _commands: Record<string, CLICommand>,
 ): void {
-  console.log("Closing the Pokedex... Goodbye!");
+  console.log("Closing the Pokedex... Goodbye!\n");
   process.exit(0);
 }
