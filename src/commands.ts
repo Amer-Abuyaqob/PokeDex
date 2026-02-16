@@ -7,7 +7,7 @@ import { commandExit } from "./command_exit";
  * @returns A map of command name to command definition
  * @example
  * const commands = getCommands();
- * commands.exit.callback(commands);
+ * commands.exit.callback([], commands);
  */
 export function getCommands(): Record<string, CLICommand> {
   return {
@@ -16,6 +16,6 @@ export function getCommands(): Record<string, CLICommand> {
       description: "Exits the pokedex",
       callback: commandExit,
     },
-    // can add more commands here
+    // TODO: Add more commands (e.g. help, map, explore, catch, inspect, pokedex).
   };
 }
