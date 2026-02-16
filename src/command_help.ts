@@ -1,4 +1,4 @@
-import { CLICommand } from "./command.js";
+import type { CLICommand } from "./command.js";
 
 /**
  * Displays a dynamic help message for all Pokedex commands.
@@ -23,4 +23,6 @@ export function commandHelp(
   for (const command of Object.values(_commands)) {
     console.log(`${command.name}: ${command.description}`);
   }
+
+  console.log("");
 }
