@@ -1,5 +1,7 @@
 import { createInterface } from "node:readline";
 import { stdin, stdout } from "node:process";
+import { getCommands } from "./commands";
+import type { CLICommand } from "./command";
 
 /**
  * Splits the user's input into words (by whitespace), lowercases it, and trims
@@ -21,15 +23,53 @@ export function cleanInput(input: string): string[] {
 }
 
 /**
- * Executes a single command given parsed tokens (e.g. ["get", "pikachu"]).
- * Single responsibility: take tokens and perform the corresponding action.
+ * Extracts the command name and its arguments from the user's tokens.
+ *
+ * @param tokens - Non-empty array of lowercase words from the user's input
+ * @returns Object containing the command name and its positional arguments
+ */
+function extractCommand(tokens: string[]): { name: string; args: string[] } {
+  const [name, ...args] = tokens;
+  return { name, args };
+}
+
+/**
+ * Looks up a command definition by name.
+ *
+ * @param name - Command name (first token from user input)
+ * @param commands - Map of all available commands
+ * @returns The matching command or undefined if not found
+ */
+function findCommand(
+  name: string,
+  commands: Record<string, CLICommand>,
+): CLICommand | undefined {
+  return commands[name];
+}
+
+/**
+ * Executes a single command given parsed tokens (e.g. ["exit"] or
+ * ["catch", "pikachu"]).
+ *
+ * Responsibilities:
+ * 1. Extract the command name and arguments.
+ * 2. Resolve the command from the registry.
+ * 3. Execute the command or report an error if unknown.
  *
  * @param tokens - Non-empty array of lowercase words from the user's input
  * @returns void
  */
 function executeCommand(tokens: string[]): void {
-  // HACK: For now, echo the first word; later dispatch to real commands (get, exit, etc.).
-  console.log(`Your command was: ${tokens[0]}`);
+  const { name, args } = extractCommand(tokens);
+  const commands = getCommands();
+  const command = findCommand(name, commands);
+
+  if (!command) {
+    console.log(`Unknown command: "${name}". Type "help" for a list of commands.`);
+    return;
+  }
+
+  command.callback(args, commands);
 }
 
 /**
