@@ -65,7 +65,7 @@ function executeCommand(tokens: string[]): void {
   const command = findCommand(name, commands);
 
   if (!command) {
-    console.log(`Unknown command: "${name}". Type "help" for a list of commands.`);
+    console.log(`Unknown command: "${name}". Type "help" for a list of commands.\n`);
     return;
   }
 
