@@ -1,7 +1,8 @@
 import { createInterface } from "node:readline";
+import type { Interface as ReadlineInterface } from "node:readline";
 import { stdin, stdout } from "node:process";
 import { getCommands } from "./commands.js";
-import type { CLICommand } from "./command.js";
+import type { CLICommand } from "./state.js";
 
 /**
  * Splits the user's input into words (by whitespace), lowercases it, and trims
@@ -57,9 +58,10 @@ function findCommand(
  * 3. Execute the command or report an error if unknown.
  *
  * @param tokens - Non-empty array of lowercase words from the user's input
+ * @param readline - Readline interface (for state so e.g. exit can close it)
  * @returns void
  */
-function executeCommand(tokens: string[]): void {
+function executeCommand(tokens: string[], readline: ReadlineInterface): void {
   const { name, args } = extractCommand(tokens);
   const commands = getCommands();
   const command = findCommand(name, commands);
@@ -69,7 +71,7 @@ function executeCommand(tokens: string[]): void {
     return;
   }
 
-  command.callback(args, commands);
+  command.callback({ args, commands, readline });
 }
 
 /**
@@ -108,7 +110,7 @@ export function startREPL(): void {
     const tokens = cleanInput(input);
 
     if (!isEmptyInput(tokens)) {
-      executeCommand(tokens);
+      executeCommand(tokens, rl);
     }
 
     rl.prompt();
