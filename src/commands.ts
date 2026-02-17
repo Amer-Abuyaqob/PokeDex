@@ -1,14 +1,14 @@
-import type { CLICommand } from "./command.js";
+import type { CLICommand } from "./state.js";
 import { commandExit } from "./command_exit.js";
 import { commandHelp } from "./command_help.js";
 
 /**
  * Builds and returns the set of available Pokedex CLI commands.
  *
- * @returns A map of command name to command definition
+ * @returns Map of command name to command definition
  * @example
  * const commands = getCommands();
- * commands.exit.callback([], commands);
+ * commands.exit.callback({ args: [], commands, readline: rl });
  */
 export function getCommands(): Record<string, CLICommand> {
   return {
