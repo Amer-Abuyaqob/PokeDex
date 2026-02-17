@@ -1,4 +1,7 @@
-import type { Interface as ReadlineInterface } from "node:readline";
+import type {
+  createInterface,
+  Interface as ReadlineInterface,
+} from "node:readline";
 
 /**
  * Snapshot of REPL context passed into each command when it runs.
