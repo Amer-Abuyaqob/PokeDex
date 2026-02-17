@@ -1,26 +1,20 @@
-import type { CLICommand } from "./command.js";
+import type { State } from "./state.js";
 
 /**
  * Displays a dynamic help message for all Pokedex commands.
  *
- * @param _args - Unused; help does not take any arguments
- * @param _commands - Map of available CLI commands to list in the help output
+ * @param state - Current state; uses state.commands to list commands in help output
  * @returns void
  * @example
- * commandHelp([], {
- *   help: { name: "help", description: "Displays a help message", callback: commandHelp },
- * } as Record<string, CLICommand>);
+ * commandHelp({ args: [], commands: { help: { ... } }, readline: rl });
  * // Prints usage information for the Pokedex and the help command
  */
-export function commandHelp(
-  _args: string[],
-  _commands: Record<string, CLICommand>,
-): void {
+export function commandHelp(state: State): void {
   console.log("Welcome to the Pokedex!");
   console.log("Usage:\n");
 
   // Iterate over all registered commands and print their name and description
-  for (const command of Object.values(_commands)) {
+  for (const command of Object.values(state.commands)) {
     console.log(`${command.name}: ${command.description}`);
   }
 
