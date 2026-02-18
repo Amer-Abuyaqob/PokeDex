@@ -1,7 +1,10 @@
-import type {
+import {
   createInterface,
-  Interface as ReadlineInterface,
+  type Interface as ReadlineInterface,
 } from "node:readline";
+import { stdin, stdout } from "node:process";
+import { commandHelp } from "./command_help.js";
+import { commandExit } from "./command_exit.js";
 
 /**
  * Snapshot of REPL context passed into each command when it runs.
@@ -37,3 +40,29 @@ export type CLICommand = {
    */
   callback: (state: State) => void;
 };
+
+/**
+ * Builds and returns the set of available Pokedex CLI commands.
+ *
+ * @returns Map of command name to command definition
+ * @example
+ * const commands = getCommands();
+ * commands.exit.callback({ args: [], commands, readline: rl });
+ */
+function getCommands(): Record<string, CLICommand> {
+  return {
+    exit: {
+      name: "exit",
+      description: "Exits the pokedex",
+      callback: commandExit,
+    },
+
+    help: {
+      name: "help",
+      description: "Displays a help message",
+      callback: commandHelp,
+    },
+
+    // TODO: Add more commands (e.g. help, map, explore, catch, inspect, pokedex).
+  };
+}
