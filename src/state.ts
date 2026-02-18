@@ -67,6 +67,17 @@ function getCommands(): Record<string, CLICommand> {
   };
 }
 
+/**
+ * Creates the initial REPL state for the Pokedex CLI.
+ *
+ * Sets up the readline interface and command registry, and returns a State
+ * object with an empty args array ready to be populated per command.
+ *
+ * @returns Initial State with empty args, commands registry, and readline interface
+ * @example
+ * const state = initState();
+ * state.readline.prompt(); // Starts the REPL prompt
+ */
 export function initState(): State {
   const args: string[] = [];
   const readline = createInterface({
