@@ -1,4 +1,5 @@
 import { startREPL } from "./repl.js";
+import { initState } from "./state.js";
 
 /**
  * Entry point: starts the Pokedex REPL.
@@ -6,7 +7,8 @@ import { startREPL } from "./repl.js";
  * @returns void
  */
 function main(): void {
-  startREPL();
+  const state = initState();
+  startREPL(state);
 }
 
 main();
