@@ -16,6 +16,7 @@ Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon dat
   - [2.3 Chapter 3 - Pokedex Commands](#23-chapter-3---pokedex-commands)
 - [3. Completed Modules](#3--completed-modules)
   - [3.1 Project Scaffold](#31-project-scaffold)
+  - [3.2 REPL Module (Chapter 1)](#32-repl-module-chapter-1)
 - [4. Pending Modules](#4--pending-modules)
 - [5. Build & Run Instructions](#5--build--run-instructions)
   - [5.1 Prerequisites](#51-prerequisites)
@@ -32,9 +33,9 @@ Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon dat
 | Component        | Status   | Description                                                       |
 | ---------------- | -------- | ----------------------------------------------------------------- |
 | Project scaffold | Complete | TypeScript setup, package.json, tsconfig                          |
-| REPL             | Pending  | Interactive read-eval-print loop                                  |
+| REPL             | Complete | Interactive read-eval-print loop with `help` and `exit` commands  |
 | Cache            | Pending  | In-memory PokeAPI response cache                                  |
-| Pokedex CLI      | Pending  | Commands: help, exit, map, mapb, explore, catch, inspect, pokedex |
+| Pokedex CLI      | Partial  | `help`, `exit` done; map, mapb, explore, catch, inspect, pokedex pending |
 
 ---
 
@@ -51,9 +52,9 @@ Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon dat
 
 ### 2.1 Chapter 1 - REPL
 
-- [ ] Implement an interactive REPL in TypeScript.
-- [ ] Read user input, evaluate it (as a command), and print the result.
-- [ ] Loop until the user exits.
+- [x] Implement an interactive REPL in TypeScript.
+- [x] Read user input, evaluate it (as a command), and print the result.
+- [x] Loop until the user exits.
 
 ### 2.2 Chapter 2 - Cache
 
@@ -91,7 +92,7 @@ Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon dat
 
 - `package.json` - Package config, npm scripts (build, start, dev)
 - `tsconfig.json` - TypeScript configuration
-- `src/main.ts` - Entry point skeleton
+- `src/main.ts` - Entry point
 
 **Features**:
 
@@ -99,6 +100,25 @@ Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon dat
 - ESM module support
 - npm scripts: `build`, `start`, `dev`
 - Node.js 18+ compatibility
+
+### 3.2 REPL Module (Chapter 1)
+
+**Status**: Complete.
+
+**Files**:
+
+- `src/repl.ts` - Core REPL logic (cleanInput, executeCommand, startREPL)
+- `src/state.ts` - State type, CLICommand type, initState, command registry
+- `src/command_help.ts` - `help` command
+- `src/command_exit.ts` - `exit` command
+
+**Features**:
+
+- Interactive readline loop with `Pokedex > ` prompt
+- Input normalization (trim, lowercase, split by whitespace)
+- Command routing and unknown-command handling
+- Dynamic help listing from the command registry
+- Graceful exit with readline cleanup
 
 **Example Usage**:
 
@@ -108,26 +128,21 @@ npm run build
 npm start
 ```
 
-Or use `npm run dev` to build and run in one step.
+Then type `help` or `exit` in the REPL. Or use `npm run dev` to build and run in one step.
 
 ---
 
 ## 4. ⏳ Pending Modules
 
-### 4.1 REPL Module
-
-- [ ] Interactive loop: read input, evaluate, print result.
-- [ ] Command routing and exit handling.
-
-### 4.2 Cache Module
+### 4.1 Cache Module
 
 - [ ] In-memory cache keyed by URL or request key.
 - [ ] Cache hit/miss logic to avoid repeated PokeAPI calls.
 - [ ] TTL or eviction (if applicable per course spec).
 
-### 4.3 Pokedex Module
+### 4.2 Pokedex Module
 
-- [ ] All commands (`help`, `exit`, `map`, `mapb`, `explore`, `catch`, `inspect`, `pokedex`).
+- [ ] Remaining commands (`map`, `mapb`, `explore`, `catch`, `inspect`, `pokedex`) — `help` and `exit` are done.
 - [ ] Integration with PokeAPI and cache.
 - [ ] In-memory storage for caught Pokemon.
 
@@ -182,10 +197,10 @@ For detailed architecture, see [PROJECT_DESC.md](PROJECT_DESC.md).
 | Requirement                          | Status    |
 | ------------------------------------ | --------- |
 | [x] Project scaffold and build setup | Complete  |
-| [ ] REPL implemented                 | Pending   |
+| [x] REPL implemented                 | Complete  |
 | [ ] In-memory cache for PokeAPI      | Pending   |
-| [ ] `help` command                   | Pending   |
-| [ ] `exit` command                   | Pending   |
+| [x] `help` command                   | Complete  |
+| [x] `exit` command                   | Complete  |
 | [ ] `map` / `mapb` commands          | Pending   |
 | [ ] `explore` command                | Pending   |
 | [ ] `catch` command                  | Pending   |
@@ -198,9 +213,9 @@ For detailed architecture, see [PROJECT_DESC.md](PROJECT_DESC.md).
 
 ### Immediate Priority
 
-1. [ ] **REPL (Chapter 1)** - Implement interactive read-eval-print loop.
+1. [x] **REPL (Chapter 1)** - Implement interactive read-eval-print loop. ✅ Done
 2. [ ] **Cache (Chapter 2)** - Implement in-memory PokeAPI response cache.
-3. [ ] **Pokedex (Chapter 3)** - Implement all CLI commands and wire to PokeAPI.
+3. [ ] **Pokedex (Chapter 3)** - Implement remaining CLI commands and wire to PokeAPI.
 
 ### Reference
 
@@ -217,4 +232,4 @@ For detailed architecture, see [PROJECT_DESC.md](PROJECT_DESC.md).
 
 **License**: ISC
 
-**Last Updated**: Project is in early stage. Project scaffold is complete; REPL, Cache, and Pokedex commands are pending.
+**Last Updated**: REPL (Chapter 1) is complete with `help` and `exit` commands. Cache and remaining Pokedex commands are pending.
