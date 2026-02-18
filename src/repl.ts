@@ -1,8 +1,4 @@
-import { createInterface } from "node:readline";
-import type { Interface as ReadlineInterface } from "node:readline";
-import { stdin, stdout } from "node:process";
-import { getCommands } from "./commands.js";
-import type { CLICommand } from "./state.js";
+import type { CLICommand, State } from "./state.js";
 
 /**
  * Splits the user's input into words (by whitespace), lowercases it, and trims
@@ -57,21 +53,23 @@ function findCommand(
  * 2. Resolve the command from the registry.
  * 3. Execute the command or report an error if unknown.
  *
+ * @param state - Base REPL state containing the command registry and readline interface
  * @param tokens - Non-empty array of lowercase words from the user's input
- * @param readline - Readline interface (for state so e.g. exit can close it)
  * @returns void
  */
-function executeCommand(tokens: string[], readline: ReadlineInterface): void {
+function executeCommand(state: State, tokens: string[]): void {
   const { name, args } = extractCommand(tokens);
-  const commands = getCommands();
-  const command = findCommand(name, commands);
+  const commandState: State = { ...state, args };
+  const command = findCommand(name, commandState.commands);
 
   if (!command) {
-    console.log(`Unknown command: "${name}". Type "help" for a list of commands.\n`);
+    console.log(
+      `Unknown command: "${name}". Type "help" for a list of commands.\n`,
+    );
     return;
   }
 
-  command.callback({ args, commands, readline });
+  command.callback(commandState);
 }
 
 /**
@@ -87,32 +85,27 @@ function isEmptyInput(tokens: string[]): boolean {
 /**
  * Starts the Read-Eval-Print Loop (REPL) for the Pokedex CLI.
  *
- * Creates a readline interface that reads from stdin and writes to stdout,
- * showing the "Pokedex > " prompt. Each time the user submits a line (Enter),
- * the input is cleaned, validated, and processed; then the prompt is shown again.
+ * Starts the interactive prompt and routes each input line to a command handler.
  *
+ * @param state - Initial REPL state created by initState
  * @returns void
  *
  * @example
  * // Typically called from main entry point:
- * startREPL();
+ * const state = initState();
+ * startREPL(state);
  */
-export function startREPL(): void {
-  const rl = createInterface({
-    input: stdin,
-    output: stdout,
-    prompt: "Pokedex > ",
-  });
+export function startREPL(state: State): void {
+  const { readline } = state;
+  readline.prompt();
 
-  rl.prompt();
-
-  rl.on("line", (input: string) => {
+  readline.on("line", (input: string) => {
     const tokens = cleanInput(input);
 
     if (!isEmptyInput(tokens)) {
-      executeCommand(tokens, rl);
+      executeCommand(state, tokens);
     }
 
-    rl.prompt();
+    readline.prompt();
   });
 }
