@@ -66,3 +66,19 @@ function getCommands(): Record<string, CLICommand> {
     // TODO: Add more commands (e.g. help, map, explore, catch, inspect, pokedex).
   };
 }
+
+export function initState(): State {
+  const args: string[] = [];
+  const readline = createInterface({
+    input: stdin,
+    output: stdout,
+    prompt: "Pokedex > ",
+  });
+  const commands = getCommands();
+
+  return {
+    args,
+    commands,
+    readline,
+  };
+}
