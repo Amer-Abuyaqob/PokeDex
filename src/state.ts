@@ -6,6 +6,7 @@ import { stdin, stdout } from "node:process";
 import { commandHelp } from "./command_help.js";
 import { commandExit } from "./command_exit.js";
 import { PokeAPI } from "./pokeapi.js";
+import { commandMap } from "./command_map.js";
 
 /**
  * Snapshot of REPL context passed into each command when it runs.
@@ -71,7 +72,13 @@ function getCommands(): Record<string, CLICommand> {
       callback: commandHelp,
     },
 
-    // TODO: Add more commands (e.g. help, map, explore, catch, inspect, pokedex).
+    map: {
+      name: "map",
+      description: "Displays 20 location-area names (paginated)",
+      callback: commandMap,
+    }
+
+    // TODO: Add more commands (e.g. explore, catch, inspect, pokedex).
   };
 }
 
