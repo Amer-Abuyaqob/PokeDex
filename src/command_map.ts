@@ -21,7 +21,7 @@ export async function commandMap(state: State): Promise<void> {
   for (const loc of data.results) {
     console.log(loc.name);
   }
-
+  console.log("");
   state.nextLocationsURL = data.next;
   state.prevLocationsURL = data.previous;
 }
