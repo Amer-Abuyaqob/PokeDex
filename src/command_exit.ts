@@ -11,7 +11,7 @@ import type { State } from "./state.js";
  * commandExit({ args: [], commands: {}, readline: rl });
  * // Closes readline, prints "Closing the Pokedex... Goodbye!" and exits
  */
-export function commandExit(state: State): void {
+export async function commandExit(state: State): Promise<void> {
   state.readline.close();
   console.log("Closing the Pokedex... Goodbye!");
   process.exit(0);
