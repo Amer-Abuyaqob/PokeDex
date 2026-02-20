@@ -51,13 +51,13 @@ function findCommand(
  * Responsibilities:
  * 1. Extract the command name and arguments.
  * 2. Resolve the command from the registry.
- * 3. Execute the command or report an error if unknown.
+ * 3. Execute the command or log an error if it throws.
  *
  * @param state - Base REPL state containing the command registry and readline interface
  * @param tokens - Non-empty array of lowercase words from the user's input
- * @returns void
+ * @returns Promise resolving when the command finishes (or rejects are caught)
  */
-function executeCommand(state: State, tokens: string[]): void {
+async function executeCommand(state: State, tokens: string[]): Promise<void> {
   const { name, args } = extractCommand(tokens);
   const commandState: State = { ...state, args };
   const command = findCommand(name, commandState.commands);
@@ -69,7 +69,12 @@ function executeCommand(state: State, tokens: string[]): void {
     return;
   }
 
-  command.callback(commandState);
+  try {
+    await command.callback(commandState);
+  } catch (e) {
+    const message = e instanceof Error ? e.message : String(e);
+    console.error("Error:", message);
+  }
 }
 
 /**
@@ -86,6 +91,7 @@ function isEmptyInput(tokens: string[]): boolean {
  * Starts the Read-Eval-Print Loop (REPL) for the Pokedex CLI.
  *
  * Starts the interactive prompt and routes each input line to a command handler.
+ * Runs until the user exits (e.g. via the exit command).
  *
  * @param state - Initial REPL state created by initState
  * @returns void
@@ -93,17 +99,17 @@ function isEmptyInput(tokens: string[]): boolean {
  * @example
  * // Typically called from main entry point:
  * const state = initState();
- * startREPL(state);
+ * startREPL(state); // REPL runs until user types "exit"
  */
 export function startREPL(state: State): void {
   const { readline } = state;
   readline.prompt();
 
-  readline.on("line", (input: string) => {
+  readline.on("line", async (input: string) => {
     const tokens = cleanInput(input);
 
     if (!isEmptyInput(tokens)) {
-      executeCommand(state, tokens);
+      await executeCommand(state, tokens);
     }
 
     readline.prompt();

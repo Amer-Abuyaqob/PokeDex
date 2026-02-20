@@ -5,12 +5,14 @@ import {
 import { stdin, stdout } from "node:process";
 import { commandHelp } from "./command_help.js";
 import { commandExit } from "./command_exit.js";
+import { PokeAPI } from "./pokeapi.js";
 
 /**
  * Snapshot of REPL context passed into each command when it runs.
  *
- * Gives handlers the command registry (e.g. for "help") and the readline
- * interface so they can clean up (e.g. "exit" closes the interface).
+ * Provides handlers with: the command registry (e.g. for "help"), the readline
+ * interface for cleanup (e.g. "exit" closes it), the PokeAPI client for
+ * fetching data, and pagination URLs for location-area browsing (map/mapb).
  */
 export type State = {
   /** Positional arguments that follow the command name. */
@@ -19,6 +21,12 @@ export type State = {
   commands: Record<string, CLICommand>;
   /** Readline interface so commands can close it (e.g. exit). */
   readline: ReadlineInterface;
+  /** PokeAPI client for fetching Pokémon data. */
+  pokeapi: PokeAPI;
+  /** URL for the next page of location areas, or null if on the last page. */
+  nextLocationsURL: string | null;
+  /** URL for the previous page of location areas, or null if on the first page. */
+  prevLocationsURL: string | null;
 };
 
 /**
@@ -35,10 +43,10 @@ export type CLICommand = {
   /**
    * Executes this command with the current REPL state.
    *
-   * @param state - Current state (args, command registry, readline interface)
-   * @returns void
+   * @param state - Full state (args, commands, readline, pokeapi, pagination URLs)
+   * @returns Promise resolving when the command finishes
    */
-  callback: (state: State) => void;
+  callback: (state: State) => Promise<void>;
 };
 
 /**
@@ -70,10 +78,11 @@ function getCommands(): Record<string, CLICommand> {
 /**
  * Creates the initial REPL state for the Pokedex CLI.
  *
- * Sets up the readline interface and command registry, and returns a State
- * object with an empty args array ready to be populated per command.
+ * Sets up the readline interface, command registry, PokeAPI client, and
+ * pagination state. Returns a State object with empty args and null
+ * pagination URLs ready to be populated per command.
  *
- * @returns Initial State with empty args, commands registry, and readline interface
+ * @returns Initial State with readline, commands, pokeapi, and empty pagination
  * @example
  * const state = initState();
  * state.readline.prompt(); // Starts the REPL prompt
@@ -86,10 +95,15 @@ export function initState(): State {
     prompt: "Pokedex > ",
   });
   const commands = getCommands();
-
+  const pokeapi = new PokeAPI();
+  const nextLocationsURL = null;
+  const prevLocationsURL = null;
   return {
     args,
     commands,
     readline,
+    pokeapi,
+    nextLocationsURL,
+    prevLocationsURL,
   };
 }

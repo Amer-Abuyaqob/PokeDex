@@ -9,7 +9,7 @@ import type { State } from "./state.js";
  * commandHelp({ args: [], commands: { help: { ... } }, readline: rl });
  * // Prints usage information for the Pokedex and the help command
  */
-export function commandHelp(state: State): void {
+export async function commandHelp(state: State): Promise<void> {
   console.log("Welcome to the Pokedex!");
   console.log("Usage:\n");
 
