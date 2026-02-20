@@ -15,7 +15,7 @@ import type { State } from "./state.js";
  */
 export async function commandMapb(state: State): Promise<void> {
   if (!state.prevLocationsURL) {
-    console.log("You're on the first page");
+    console.log("You're on the first page\n");
     return;
   }
 
