@@ -50,17 +50,19 @@ function findCommand(
  *
  * Responsibilities:
  * 1. Extract the command name and arguments.
- * 2. Resolve the command from the registry.
- * 3. Execute the command or log an error if it throws.
+ * 2. Set state.args for the current invocation.
+ * 3. Resolve the command from the registry.
+ * 4. Execute the command with the shared state (mutations persist across calls).
+ * 5. Log an error if the command throws.
  *
- * @param state - Base REPL state containing the command registry and readline interface
+ * @param state - Shared REPL state; mutated (args set) and passed to the command callback
  * @param tokens - Non-empty array of lowercase words from the user's input
  * @returns Promise resolving when the command finishes (or rejects are caught)
  */
 async function executeCommand(state: State, tokens: string[]): Promise<void> {
   const { name, args } = extractCommand(tokens);
-  const commandState: State = { ...state, args };
-  const command = findCommand(name, commandState.commands);
+  state.args = args;
+  const command = findCommand(name, state.commands);
 
   if (!command) {
     console.log(
@@ -70,7 +72,7 @@ async function executeCommand(state: State, tokens: string[]): Promise<void> {
   }
 
   try {
-    await command.callback(commandState);
+    await command.callback(state);
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
     console.error("Error:", message);
