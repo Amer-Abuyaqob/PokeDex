@@ -89,4 +89,15 @@ export class Cache {
       }
     }
   }
+
+  /**
+   * Starts the periodic reap loop that removes stale cache entries.
+   *
+   * Idempotent: does nothing if the loop is already running.
+   */
+  #startReapLoop(): void {
+    if (this.#reapIntervalId !== undefined) return;
+
+    this.#reapIntervalId = setInterval(() => this.#reap(), this.#interval);
+  }
 }
