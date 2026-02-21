@@ -17,6 +17,7 @@ type CacheEntry<T> = {
  * and serving it from memory when available. Starts a background reap loop
  * on construction that removes stale entries at the configured interval.
  * Use {@link add} to store entries and {@link get} to retrieve them.
+ * Call {@link stopReapLoop} to stop the background loop (e.g., on shutdown).
  */
 export class Cache {
   /** Internal map of cache keys to their entries. */
@@ -65,6 +66,17 @@ export class Cache {
    */
   get<T>(key: string): T | undefined {
     return this.#cache.get(key)?.value;
+  }
+
+  /**
+   * Stops the background reap loop.
+   *
+   * Idempotent: safe to call when the loop is already stopped.
+   * Call this when shutting down to prevent the interval from keeping the process alive.
+   */
+  stopReapLoop(): void {
+    clearInterval(this.#reapIntervalId);
+    this.#reapIntervalId = undefined;
   }
 
   /**
