@@ -65,4 +65,28 @@ export class Cache {
   get<T>(key: string): T | undefined {
     return this.#cache.get(key)?.value;
   }
+
+  /**
+   * Determines whether a cache entry has exceeded its TTL.
+   *
+   * @param entry - The cache entry to check.
+   * @returns `true` if the entry is older than the reap interval.
+   */
+  #isOld(entry: CacheEntry<any>): boolean {
+    return Date.now() - entry.cachedAt > this.#interval;
+  }
+
+  /**
+   * Removes all stale entries from the cache.
+   *
+   * Called periodically by the reap scheduler. Entries are considered stale
+   * when their age exceeds the configured interval.
+   */
+  #reap(): void {
+    for (const [key, entry] of this.#cache) {
+      if (this.#isOld(entry)) {
+        this.#cache.delete(key);
+      }
+    }
+  }
 }
