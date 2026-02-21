@@ -4,8 +4,8 @@
  * @template T - The type of the cached value (e.g., Pokémon, list of Pokémon).
  */
 type CacheEntry<T> = {
-  /** Unix timestamp (ms) when the entry was cached. */
-  cachedAt: number;
+  /** Unix timestamp (ms) when the entry was created. */
+  createdAt: number;
   /** The cached data. */
   value: T;
 };
@@ -35,7 +35,7 @@ export class Cache {
    */
   constructor(interval: number) {
     if (interval <= 0) {
-      throw new RangeError("interval must be a positive number");
+      throw new RangeError("Reap interval must be a positive number");
     }
     this.#interval = interval;
   }
@@ -51,8 +51,8 @@ export class Cache {
    * @template T - Type of the value being stored.
    */
   add<T>(key: string, value: T): void {
-    const cachedAt = Date.now();
-    this.#cache.set(key, { cachedAt, value });
+    const createdAt = Date.now();
+    this.#cache.set(key, { createdAt, value });
   }
 
   /**
@@ -73,7 +73,7 @@ export class Cache {
    * @returns `true` if the entry is older than the reap interval.
    */
   #isOld(entry: CacheEntry<any>): boolean {
-    return Date.now() - entry.cachedAt > this.#interval;
+    return Date.now() - entry.createdAt > this.#interval;
   }
 
   /**
