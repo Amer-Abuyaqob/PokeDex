@@ -33,9 +33,10 @@ Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon dat
 | Component        | Status   | Description                                                       |
 | ---------------- | -------- | ----------------------------------------------------------------- |
 | Project scaffold | Complete | TypeScript setup, package.json, tsconfig                          |
-| REPL             | Complete | Interactive read-eval-print loop with `help` and `exit` commands  |
+| REPL             | Complete | Interactive read-eval-print loop with shared state for pagination |
+| PokeAPI client   | Complete | `fetchLocations` for paginated location-area data                 |
 | Cache            | Pending  | In-memory PokeAPI response cache                                  |
-| Pokedex CLI      | Partial  | `help`, `exit` done; map, mapb, explore, catch, inspect, pokedex pending |
+| Pokedex CLI      | Partial  | `help`, `exit`, `map`, `mapb` done; explore, catch, inspect, pokedex pending |
 
 ---
 
@@ -67,18 +68,18 @@ Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon dat
 - [ ] Combine REPL and cache into a full Pokedex CLI.
 - [ ] Wire commands to PokeAPI and the cache.
 
-**Planned commands:**
+**Commands:**
 
-| Command  | Description                          |
-| -------- | ------------------------------------ |
-| `help`   | Show available commands              |
-| `exit`   | Exit the application                 |
-| `map`    | Show next page of locations          |
-| `mapb`   | Show previous page of locations      |
-| `explore`| Explore a location for Pokemon       |
-| `catch`  | Attempt to catch a Pokemon           |
-| `inspect`| Inspect a caught Pokemon             |
-| `pokedex`| List all caught Pokemon              |
+| Command  | Status   | Description                          |
+| -------- | -------- | ------------------------------------ |
+| `help`   | Complete | Show available commands              |
+| `exit`   | Complete | Exit the application                 |
+| `map`    | Complete | Show next 20 location-area names     |
+| `mapb`   | Complete | Show previous 20 location-area names |
+| `explore`| Pending  | Explore a location for Pokemon       |
+| `catch`  | Pending  | Attempt to catch a Pokemon           |
+| `inspect`| Pending  | Inspect a caught Pokemon             |
+| `pokedex`| Pending  | List all caught Pokemon              |
 
 ---
 
@@ -111,6 +112,8 @@ Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon dat
 - `src/state.ts` - State type, CLICommand type, initState, command registry
 - `src/command_help.ts` - `help` command
 - `src/command_exit.ts` - `exit` command
+- `src/command_map.ts` - `map` command (forward pagination)
+- `src/command_mapb.ts` - `mapb` command (backward pagination)
 
 **Features**:
 
@@ -119,6 +122,22 @@ Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon dat
 - Command routing and unknown-command handling
 - Dynamic help listing from the command registry
 - Graceful exit with readline cleanup
+- Shared state for pagination (mutations persist across command invocations)
+- Error handling via try-catch with `console.error` for thrown commands
+
+### 3.3 PokeAPI Module
+
+**Status**: Complete (fetchLocations); `fetchLocation` stub pending.
+
+**Files**:
+
+- `src/pokeapi.ts` - PokeAPI client, `fetchLocations`, `ShallowLocation` / `ShallowLocations` types
+
+**Features**:
+
+- HTTP client for PokeAPI v2
+- `fetchLocations(pageURL?)` - Paginated location-area list (20 per page)
+- `fetchLocation(name)` - Stub for single location details (not yet implemented)
 
 **Example Usage**:
 
@@ -128,7 +147,7 @@ npm run build
 npm start
 ```
 
-Then type `help` or `exit` in the REPL. Or use `npm run dev` to build and run in one step.
+Then type `help`, `map`, `mapb`, or `exit` in the REPL. Use `map` repeatedly to paginate forward; use `mapb` to go back. Or use `npm run dev` to build and run in one step.
 
 ---
 
@@ -142,8 +161,9 @@ Then type `help` or `exit` in the REPL. Or use `npm run dev` to build and run in
 
 ### 4.2 Pokedex Module
 
-- [ ] Remaining commands (`map`, `mapb`, `explore`, `catch`, `inspect`, `pokedex`) — `help` and `exit` are done.
-- [ ] Integration with PokeAPI and cache.
+- [ ] Remaining commands (`explore`, `catch`, `inspect`, `pokedex`) — `help`, `exit`, `map`, `mapb` are done.
+- [ ] PokeAPI `fetchLocation(name)` implementation for explore/catch flow.
+- [ ] Integration with cache (when implemented).
 - [ ] In-memory storage for caught Pokemon.
 
 ---
@@ -198,10 +218,11 @@ For detailed architecture, see [PROJECT_DESC.md](PROJECT_DESC.md).
 | ------------------------------------ | --------- |
 | [x] Project scaffold and build setup | Complete  |
 | [x] REPL implemented                 | Complete  |
+| [x] PokeAPI client (fetchLocations)  | Complete  |
 | [ ] In-memory cache for PokeAPI      | Pending   |
 | [x] `help` command                   | Complete  |
 | [x] `exit` command                   | Complete  |
-| [ ] `map` / `mapb` commands          | Pending   |
+| [x] `map` / `mapb` commands          | Complete  |
 | [ ] `explore` command                | Pending   |
 | [ ] `catch` command                  | Pending   |
 | [ ] `inspect` command                | Pending   |
@@ -214,8 +235,9 @@ For detailed architecture, see [PROJECT_DESC.md](PROJECT_DESC.md).
 ### Immediate Priority
 
 1. [x] **REPL (Chapter 1)** - Implement interactive read-eval-print loop. ✅ Done
-2. [ ] **Cache (Chapter 2)** - Implement in-memory PokeAPI response cache.
-3. [ ] **Pokedex (Chapter 3)** - Implement remaining CLI commands and wire to PokeAPI.
+2. [x] **PokeAPI integration** - fetchLocations for map/mapb. ✅ Done
+3. [ ] **Cache (Chapter 2)** - Implement in-memory PokeAPI response cache.
+4. [ ] **Pokedex (Chapter 3)** - Implement `explore`, `catch`, `inspect`, `pokedex` and wire to PokeAPI.
 
 ### Reference
 
@@ -232,4 +254,4 @@ For detailed architecture, see [PROJECT_DESC.md](PROJECT_DESC.md).
 
 **License**: ISC
 
-**Last Updated**: REPL (Chapter 1) is complete with `help` and `exit` commands. Cache and remaining Pokedex commands are pending.
+**Last Updated**: REPL complete with `help`, `exit`, `map`, and `mapb`. PokeAPI client integrated for location-area pagination. Cache and remaining commands (`explore`, `catch`, `inspect`, `pokedex`) pending.
