@@ -14,7 +14,8 @@ type CacheEntry<T> = {
  * In-memory cache for Pokémon API responses.
  *
  * Reduces network requests by storing previously fetched data
- * and serving it from memory when available. Use {@link add} to store entries.
+ * and serving it from memory when available. Use {@link add} to store entries
+ * and {@link get} to retrieve them.
  */
 export class Cache {
   /** Internal map of cache keys to their entries. */
@@ -32,5 +33,16 @@ export class Cache {
   add<T>(key: string, value: T): void {
     const cachedAt = Date.now();
     this.#cache.set(key, { cachedAt, value });
+  }
+
+  /**
+   * Retrieves a value from the cache by key.
+   *
+   * @param key - The cache key to look up.
+   * @returns The cached value, or `undefined` if the key is not found.
+   * @template T - Expected type of the cached value (for type-safe retrieval).
+   */
+  get<T>(key: string): T | undefined {
+    return this.#cache.get(key)?.value;
   }
 }
