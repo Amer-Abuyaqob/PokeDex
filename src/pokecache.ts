@@ -14,12 +14,32 @@ type CacheEntry<T> = {
  * In-memory cache for Pokémon API responses.
  *
  * Reduces network requests by storing previously fetched data
- * and serving it from memory when available. Use {@link add} to store entries
- * and {@link get} to retrieve them.
+ * and serving it from memory when available. Supports automatic reaping
+ * of stale entries at a configurable interval. Use {@link add} to store
+ * entries and {@link get} to retrieve them.
  */
 export class Cache {
   /** Internal map of cache keys to their entries. */
   #cache = new Map<string, CacheEntry<any>>();
+
+  /** ID of the active reap interval, or `undefined` when not running. */
+  #reapIntervalId: NodeJS.Timeout | undefined = undefined;
+
+  /** Reap interval in milliseconds. */
+  readonly #interval: number;
+
+  /**
+   * Creates a cache with the given reap interval.
+   *
+   * @param interval - How often (in ms) to run the reap process. Must be positive.
+   */
+  constructor(interval: number) {
+    if (interval <= 0) {
+      throw new RangeError("interval must be a positive number");
+    }
+    this.#interval = interval;
+  }
+
 
   /**
    * Stores a value in the cache under the given key.
