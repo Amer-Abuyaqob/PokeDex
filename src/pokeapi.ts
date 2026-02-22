@@ -139,7 +139,7 @@ export class PokeAPI {
 export type ShallowLocation = {
   name: string;
   url: string;
-  pokemon_encounters?: ShallowPokemon[];
+  pokemon_encounters?: ShallowEncounter[];
 };
 
 /**
@@ -164,7 +164,7 @@ export type ShallowLocations = {
  * @property pokemon.name - Pokémon name (e.g. "pikachu").
  * @property pokemon.url - PokeAPI URL for full Pokémon details.
  */
-export type ShallowPokemon = {
+export type ShallowEncounter = {
   pokemon: {
     name: string;
     url: string;

@@ -1,4 +1,4 @@
-import type { ShallowPokemon } from "./pokeapi.js";
+import type { ShallowEncounter } from "./pokeapi.js";
 import type { State } from "./state.js";
 
 /**
@@ -20,7 +20,7 @@ function getLocationName(args: string[]): string | undefined {
  */
 function printExploreResult(
   locationName: string,
-  encounters: ShallowPokemon[] | undefined,
+  encounters: ShallowEncounter[] | undefined,
 ): void {
   console.log(`Exploring ${locationName}...`);
   if (!encounters || encounters.length < 1) {
