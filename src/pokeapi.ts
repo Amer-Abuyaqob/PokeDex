@@ -110,7 +110,14 @@ export type ShallowLocation = {
   pokemonEncounters: ShallowPokemon[];
 };
 
-/** Paginated response for location-area list endpoint. */
+/**
+ * Paginated response for the location-area list endpoint.
+ *
+ * @property count - Total number of location areas across all pages.
+ * @property next - URL for the next page, or `null` if this is the last page.
+ * @property previous - URL for the previous page, or `null` if this is the first page.
+ * @property results - Array of location area entries for the current page.
+ */
 export type ShallowLocations = {
   count: number;
   next: string | null;
