@@ -98,8 +98,8 @@ export class PokeAPI {
    * @throws {Error} When the location is not found or the request fails.
    */
   async fetchLocation(locationName: string): Promise<ShallowLocation> {
-    // TODO: to be implemented
-    throw new Error("Not implemented");
+    const url = `${PokeAPI.baseURL}/location-area/${locationName}`;
+    return PokeAPI.#fetchWithCache<ShallowLocation>(url);
   }
 }
 
@@ -107,7 +107,7 @@ export class PokeAPI {
 export type ShallowLocation = {
   name: string;
   url: string;
-  pokemonEncounters: ShallowPokemon[];
+  pokemon_encounters: ShallowPokemon[];
 };
 
 /**
@@ -132,6 +132,9 @@ export type ShallowLocations = {
  * @property url - PokeAPI URL for full Pokémon details.
  */
 export type ShallowPokemon = {
-  name: string;
-  url: string;
+  pokemon: {
+    name: string;
+    url: string;
+  };
+  // version_details: any;
 };
