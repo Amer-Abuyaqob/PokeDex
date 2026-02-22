@@ -116,3 +116,14 @@ export type ShallowLocations = {
   previous: string | null;
   results: ShallowLocation[];
 };
+
+/**
+ * Minimal Pokémon shape returned in list endpoints (name + URL).
+ *
+ * @property name - Pokémon name (e.g. "pikachu").
+ * @property url - PokeAPI URL for full Pokémon details.
+ */
+export type ShallowPokemon = {
+  name: string;
+  url: string;
+};
