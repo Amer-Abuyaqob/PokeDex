@@ -1,7 +1,10 @@
+import { Cache } from "./pokecache.js";
+
 /**
  * Client for the PokeAPI (https://pokeapi.co/).
  *
  * Handles HTTP requests for Pokémon-related data such as locations and location areas.
+ * Caches successful responses in memory to reduce redundant network requests.
  */
 export class PokeAPI {
   /** Base URL for all PokeAPI v2 endpoints. */
@@ -10,10 +13,65 @@ export class PokeAPI {
   /** Default page size when fetching paginated location-area results. */
   private static readonly DEFAULT_PAGE_SIZE = 20;
 
+  /** Cache TTL in milliseconds (5 minutes). Entries are reaped after this age. */
+  private static readonly CACHE_TTL_MS = 300_000;
+
+  /** Shared in-memory cache for API responses. */
+  private static cache = new Cache(PokeAPI.CACHE_TTL_MS);
+
   constructor() {}
 
   /**
+   * Stores a successful API response in the cache.
+   *
+   * @param url - Cache key (the request URL).
+   * @param data - The response data to cache.
+   * @template T - Type of the cached data.
+   */
+  static #addToCache<T>(url: string, data: T): void {
+    PokeAPI.cache.add<T>(url, data);
+  }
+
+  /**
+   * Looks up a cached response by URL.
+   *
+   * @param url - Cache key (the request URL).
+   * @returns The cached data, or `undefined` on miss.
+   * @template T - Expected type of the cached data.
+   */
+  static #getFromCache<T>(url: string): T | undefined {
+    return PokeAPI.cache.get<T>(url);
+  }
+
+  /**
+   * Fetches JSON from a URL, using cache when available.
+   *
+   * On cache miss: fetches, validates the response, parses JSON, stores in cache.
+   *
+   * @param url - The URL to fetch.
+   * @returns The parsed response data.
+   * @template T - Expected shape of the JSON response.
+   * @throws {Error} When the HTTP response is not OK.
+   */
+  static async #fetchWithCache<T>(url: string): Promise<T> {
+    const cached = PokeAPI.#getFromCache<T>(url);
+    if (cached) return cached;
+
+    const res = await fetch(url);
+    if (!res.ok) {
+      throw new Error(`PokeAPI error: ${res.status} ${res.statusText}`);
+    }
+
+    const data = (await res.json()) as T;
+    PokeAPI.#addToCache<T>(url, data);
+    return data;
+  }
+
+  /**
    * Fetches a paginated list of location areas from the PokeAPI.
+   *
+   * Successful responses are cached by URL; repeated requests for the same URL
+   * return the cached result until the entry expires (see {@link CACHE_TTL_MS}).
    *
    * @param pageURL - Optional full URL for a specific page (e.g. `next` or `previous` from a prior response).
    *                  If omitted, fetches the first page.
@@ -29,13 +87,7 @@ export class PokeAPI {
       pageURL ??
       `${PokeAPI.baseURL}/location-area?offset=0&limit=${PokeAPI.DEFAULT_PAGE_SIZE}`;
 
-    const res = await fetch(url);
-    if (!res.ok) {
-      throw new Error(`PokeAPI error: ${res.status} ${res.statusText}`);
-    }
-
-    const data = (await res.json()) as ShallowLocations;
-    return data;
+    return PokeAPI.#fetchWithCache<ShallowLocations>(url);
   }
 
   /**
