@@ -107,6 +107,7 @@ export class PokeAPI {
 export type ShallowLocation = {
   name: string;
   url: string;
+  pokemonEncounters: ShallowPokemon[];
 };
 
 /** Paginated response for location-area list endpoint. */
