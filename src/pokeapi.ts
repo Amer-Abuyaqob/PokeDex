@@ -19,6 +19,7 @@ export class PokeAPI {
   /** Shared in-memory cache for API responses. */
   private static cache = new Cache(PokeAPI.CACHE_TTL_MS);
 
+  /** Creates a PokeAPI client instance. */
   constructor() {}
 
   /**
@@ -26,6 +27,7 @@ export class PokeAPI {
    *
    * @param url - Cache key (the request URL).
    * @param data - The response data to cache.
+   * @returns void
    * @template T - Type of the cached data.
    */
   static #addToCache<T>(url: string, data: T): void {
@@ -54,7 +56,7 @@ export class PokeAPI {
    * Looks up a cached response by URL.
    *
    * @param url - Cache key (the request URL).
-   * @returns The cached data, or `undefined` on miss.
+   * @returns The cached data, or undefined on miss.
    * @template T - Expected type of the cached data.
    */
   static #getFromCache<T>(url: string): T | undefined {
@@ -126,7 +128,14 @@ export class PokeAPI {
   }
 }
 
-/** Minimal location/item shape returned in list endpoints (name + URL). */
+/**
+ * Location-area shape from PokeAPI. List items have name and url; detail
+ * responses add pokemon_encounters.
+ *
+ * @property name - Location area name (e.g. "oreburgh-mine-b1f").
+ * @property url - PokeAPI URL for this location area.
+ * @property pokemon_encounters - Present only in detail responses; list items omit it.
+ */
 export type ShallowLocation = {
   name: string;
   url: string;
@@ -149,15 +158,15 @@ export type ShallowLocations = {
 };
 
 /**
- * Minimal Pokémon shape returned in list endpoints (name + URL).
+ * Pokémon encounter shape from location-area detail (nested under pokemon).
  *
- * @property name - Pokémon name (e.g. "pikachu").
- * @property url - PokeAPI URL for full Pokémon details.
+ * @property pokemon - The Pokémon reference with name and URL.
+ * @property pokemon.name - Pokémon name (e.g. "pikachu").
+ * @property pokemon.url - PokeAPI URL for full Pokémon details.
  */
 export type ShallowPokemon = {
   pokemon: {
     name: string;
     url: string;
   };
-  // version_details: any;
 };
