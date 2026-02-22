@@ -33,6 +33,24 @@ export class PokeAPI {
   }
 
   /**
+   * Validates locationName. Input comes from cleanInput (no trimming needed;
+   * cleanInput never returns empty strings).
+   *
+   * Caller scenarios: correct name (success), incorrect name (API 404), or
+   * no args (undefined when user types e.g. "explore" with nothing after).
+   *
+   * @param locationName - The location area name (or undefined when no args).
+   * @returns The validated location name.
+   * @throws {Error} When locationName is not a string (e.g. undefined, no args).
+   */
+  static #validateLocationName(locationName: unknown): string {
+    if (typeof locationName !== "string") {
+      throw new Error("fetchLocation: locationName must be a string");
+    }
+    return locationName;
+  }
+
+  /**
    * Looks up a cached response by URL.
    *
    * @param url - Cache key (the request URL).
@@ -95,10 +113,15 @@ export class PokeAPI {
    *
    * @param locationName - The location area name (e.g. "canalave-city-area").
    * @returns The location area details.
+   * @throws {Error} When locationName is not a string (e.g. no args provided).
    * @throws {Error} When the location is not found or the request fails.
+   * @example
+   * const api = new PokeAPI();
+   * const loc = await api.fetchLocation("oreburgh-mine-b1f");
    */
   async fetchLocation(locationName: string): Promise<ShallowLocation> {
-    const url = `${PokeAPI.baseURL}/location-area/${locationName}`;
+    const validated = PokeAPI.#validateLocationName(locationName);
+    const url = `${PokeAPI.baseURL}/location-area/${validated}`;
     return PokeAPI.#fetchWithCache<ShallowLocation>(url);
   }
 }
@@ -107,7 +130,7 @@ export class PokeAPI {
 export type ShallowLocation = {
   name: string;
   url: string;
-  pokemon_encounters: ShallowPokemon[];
+  pokemon_encounters?: ShallowPokemon[];
 };
 
 /**
