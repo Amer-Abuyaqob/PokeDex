@@ -17,6 +17,8 @@ Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon dat
 - [3. Completed Modules](#3--completed-modules)
   - [3.1 Project Scaffold](#31-project-scaffold)
   - [3.2 REPL Module (Chapter 1)](#32-repl-module-chapter-1)
+  - [3.3 Cache Module (Chapter 2)](#33-cache-module-chapter-2)
+  - [3.4 PokeAPI Module](#34-pokeapi-module)
 - [4. Pending Modules](#4--pending-modules)
 - [5. Build & Run Instructions](#5--build--run-instructions)
   - [5.1 Prerequisites](#51-prerequisites)
@@ -34,8 +36,8 @@ Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon dat
 | ---------------- | -------- | ----------------------------------------------------------------- |
 | Project scaffold | Complete | TypeScript setup, package.json, tsconfig                          |
 | REPL             | Complete | Interactive read-eval-print loop with shared state for pagination |
-| PokeAPI client   | Complete | `fetchLocations` for paginated location-area data                 |
-| Cache            | Pending  | In-memory PokeAPI response cache                                  |
+| PokeAPI client   | Complete | `fetchLocations` for paginated location-area data, cached         |
+| Cache            | Complete | In-memory PokeAPI response cache with TTL and reap loop           |
 | Pokedex CLI      | Partial  | `help`, `exit`, `map`, `mapb` done; explore, catch, inspect, pokedex pending |
 
 ---
@@ -59,14 +61,14 @@ Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon dat
 
 ### 2.2 Chapter 2 - Cache
 
-- [ ] Implement an in-memory cache for PokeAPI responses.
-- [ ] Use it to avoid redundant network requests (e.g. cache by URL or request key).
-- [ ] Consider TTL or eviction if specified in the course.
+- [x] Implement an in-memory cache for PokeAPI responses.
+- [x] Use it to avoid redundant network requests (e.g. cache by URL or request key).
+- [x] TTL and eviction: reap loop removes entries older than the configured interval.
 
 ### 2.3 Chapter 3 - Pokedex Commands
 
-- [ ] Combine REPL and cache into a full Pokedex CLI.
-- [ ] Wire commands to PokeAPI and the cache.
+- [x] Combine REPL and cache into a full Pokedex CLI.
+- [x] Wire commands to PokeAPI and the cache.
 
 **Commands:**
 
@@ -125,7 +127,23 @@ Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon dat
 - Shared state for pagination (mutations persist across command invocations)
 - Error handling via try-catch with `console.error` for thrown commands
 
-### 3.3 PokeAPI Module
+### 3.3 Cache Module (Chapter 2)
+
+**Status**: Complete.
+
+**Files**:
+
+- `src/pokecache.ts` - Cache class, CacheEntry type
+- `src/pokecache.test.ts` - Vitest tests for add/get and TTL reaping
+
+**Features**:
+
+- In-memory cache keyed by URL
+- `add(key, value)` / `get(key)` API
+- Configurable TTL; background reap loop removes stale entries
+- `stopReapLoop()` for clean shutdown
+
+### 3.4 PokeAPI Module
 
 **Status**: Complete (fetchLocations); `fetchLocation` stub pending.
 
@@ -136,7 +154,8 @@ Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon dat
 **Features**:
 
 - HTTP client for PokeAPI v2
-- `fetchLocations(pageURL?)` - Paginated location-area list (20 per page)
+- `fetchLocations(pageURL?)` - Paginated location-area list (20 per page), cached by URL (5 min TTL)
+- `#fetchWithCache<T>` - Private helper for cache-or-fetch pattern
 - `fetchLocation(name)` - Stub for single location details (not yet implemented)
 
 **Example Usage**:
@@ -153,17 +172,10 @@ Then type `help`, `map`, `mapb`, or `exit` in the REPL. Use `map` repeatedly to 
 
 ## 4. ⏳ Pending Modules
 
-### 4.1 Cache Module
-
-- [ ] In-memory cache keyed by URL or request key.
-- [ ] Cache hit/miss logic to avoid repeated PokeAPI calls.
-- [ ] TTL or eviction (if applicable per course spec).
-
-### 4.2 Pokedex Module
+### 4.1 Pokedex Module
 
 - [ ] Remaining commands (`explore`, `catch`, `inspect`, `pokedex`) — `help`, `exit`, `map`, `mapb` are done.
 - [ ] PokeAPI `fetchLocation(name)` implementation for explore/catch flow.
-- [ ] Integration with cache (when implemented).
 - [ ] In-memory storage for caught Pokemon.
 
 ---
@@ -189,6 +201,12 @@ npm start
 ```
 
 Or use `npm run dev` to build and run in one step.
+
+Run tests:
+
+```bash
+npm test
+```
 
 ---
 
@@ -219,7 +237,7 @@ For detailed architecture, see [PROJECT_DESC.md](PROJECT_DESC.md).
 | [x] Project scaffold and build setup | Complete  |
 | [x] REPL implemented                 | Complete  |
 | [x] PokeAPI client (fetchLocations)  | Complete  |
-| [ ] In-memory cache for PokeAPI      | Pending   |
+| [x] In-memory cache for PokeAPI      | Complete  |
 | [x] `help` command                   | Complete  |
 | [x] `exit` command                   | Complete  |
 | [x] `map` / `mapb` commands          | Complete  |
@@ -236,7 +254,7 @@ For detailed architecture, see [PROJECT_DESC.md](PROJECT_DESC.md).
 
 1. [x] **REPL (Chapter 1)** - Implement interactive read-eval-print loop. ✅ Done
 2. [x] **PokeAPI integration** - fetchLocations for map/mapb. ✅ Done
-3. [ ] **Cache (Chapter 2)** - Implement in-memory PokeAPI response cache.
+3. [x] **Cache (Chapter 2)** - Implement in-memory PokeAPI response cache. ✅ Done
 4. [ ] **Pokedex (Chapter 3)** - Implement `explore`, `catch`, `inspect`, `pokedex` and wire to PokeAPI.
 
 ### Reference
@@ -254,4 +272,4 @@ For detailed architecture, see [PROJECT_DESC.md](PROJECT_DESC.md).
 
 **License**: ISC
 
-**Last Updated**: REPL complete with `help`, `exit`, `map`, and `mapb`. PokeAPI client integrated for location-area pagination. Cache and remaining commands (`explore`, `catch`, `inspect`, `pokedex`) pending.
+**Last Updated**: Cache implemented. PokeAPI responses cached by URL (5 min TTL). `map`/`mapb` use cache. Remaining commands (`explore`, `catch`, `inspect`, `pokedex`) pending.
