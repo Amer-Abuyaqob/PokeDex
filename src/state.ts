@@ -6,6 +6,7 @@ import { stdin, stdout } from "node:process";
 import { commandHelp } from "./command_help.js";
 import { commandExit } from "./command_exit.js";
 import { PokeAPI } from "./pokeapi.js";
+import { commandExplore } from "./command_explore.js";
 import { commandMap } from "./command_map.js";
 import { commandMapb } from "./command_mapb.js";
 
@@ -85,7 +86,14 @@ function getCommands(): Record<string, CLICommand> {
       callback: commandMapb,
     },
 
-    // TODO: Add more commands (e.g. explore, catch, inspect, pokedex).
+    explore: {
+      name: "explore",
+      description:
+        "Displays Pokemon that can be encountered at a location area",
+      callback: commandExplore,
+    },
+
+    // TODO: Add more commands (e.g. catch, inspect, pokedex).
   };
 }
 

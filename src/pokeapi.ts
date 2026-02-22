@@ -19,6 +19,7 @@ export class PokeAPI {
   /** Shared in-memory cache for API responses. */
   private static cache = new Cache(PokeAPI.CACHE_TTL_MS);
 
+  /** Creates a PokeAPI client instance. */
   constructor() {}
 
   /**
@@ -26,6 +27,7 @@ export class PokeAPI {
    *
    * @param url - Cache key (the request URL).
    * @param data - The response data to cache.
+   * @returns void
    * @template T - Type of the cached data.
    */
   static #addToCache<T>(url: string, data: T): void {
@@ -33,10 +35,28 @@ export class PokeAPI {
   }
 
   /**
+   * Validates locationName. Input comes from cleanInput (no trimming needed;
+   * cleanInput never returns empty strings).
+   *
+   * Caller scenarios: correct name (success), incorrect name (API 404), or
+   * no args (undefined when user types e.g. "explore" with nothing after).
+   *
+   * @param locationName - The location area name (or undefined when no args).
+   * @returns The validated location name.
+   * @throws {Error} When locationName is not a string (e.g. undefined, no args).
+   */
+  static #validateLocationName(locationName: unknown): string {
+    if (typeof locationName !== "string") {
+      throw new Error("fetchLocation: locationName must be a string");
+    }
+    return locationName;
+  }
+
+  /**
    * Looks up a cached response by URL.
    *
    * @param url - Cache key (the request URL).
-   * @returns The cached data, or `undefined` on miss.
+   * @returns The cached data, or undefined on miss.
    * @template T - Expected type of the cached data.
    */
   static #getFromCache<T>(url: string): T | undefined {
@@ -95,24 +115,58 @@ export class PokeAPI {
    *
    * @param locationName - The location area name (e.g. "canalave-city-area").
    * @returns The location area details.
+   * @throws {Error} When locationName is not a string (e.g. no args provided).
    * @throws {Error} When the location is not found or the request fails.
+   * @example
+   * const api = new PokeAPI();
+   * const loc = await api.fetchLocation("oreburgh-mine-b1f");
    */
   async fetchLocation(locationName: string): Promise<ShallowLocation> {
-    // TODO: to be implemented
-    throw new Error("Not implemented");
+    const validated = PokeAPI.#validateLocationName(locationName);
+    const url = `${PokeAPI.baseURL}/location-area/${validated}`;
+    return PokeAPI.#fetchWithCache<ShallowLocation>(url);
   }
 }
 
-/** Minimal location/item shape returned in list endpoints (name + URL). */
+/**
+ * Location-area shape from PokeAPI. List items have name and url; detail
+ * responses add pokemon_encounters.
+ *
+ * @property name - Location area name (e.g. "oreburgh-mine-b1f").
+ * @property url - PokeAPI URL for this location area.
+ * @property pokemon_encounters - Present only in detail responses; list items omit it.
+ */
 export type ShallowLocation = {
   name: string;
   url: string;
+  pokemon_encounters?: ShallowPokemon[];
 };
 
-/** Paginated response for location-area list endpoint. */
+/**
+ * Paginated response for the location-area list endpoint.
+ *
+ * @property count - Total number of location areas across all pages.
+ * @property next - URL for the next page, or `null` if this is the last page.
+ * @property previous - URL for the previous page, or `null` if this is the first page.
+ * @property results - Array of location area entries for the current page.
+ */
 export type ShallowLocations = {
   count: number;
   next: string | null;
   previous: string | null;
   results: ShallowLocation[];
+};
+
+/**
+ * Pokémon encounter shape from location-area detail (nested under pokemon).
+ *
+ * @property pokemon - The Pokémon reference with name and URL.
+ * @property pokemon.name - Pokémon name (e.g. "pikachu").
+ * @property pokemon.url - PokeAPI URL for full Pokémon details.
+ */
+export type ShallowPokemon = {
+  pokemon: {
+    name: string;
+    url: string;
+  };
 };
