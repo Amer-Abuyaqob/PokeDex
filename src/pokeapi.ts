@@ -208,8 +208,46 @@ export type ShallowEncounter = {
  *
  * @property name - Pokémon name (e.g. "pikachu").
  * @property base_experience - Base experience points yielded when defeated.
+ * @property height - Height in decimetres.
+ * @property weight - Weight in hectograms.
+ * @property stats - Base stats (hp, attack, defense, etc.) and effort values.
+ * @property types - Type slots (e.g. electric, fire) and their order.
  */
 export type ShallowPokemon = {
   name: string;
   base_experience: number;
+  height: number;
+  weight: number;
+  stats: PokemonStat[];
+  types: PokemonType[];
+};
+
+/**
+ * A single base stat entry from the PokeAPI pokemon stats array.
+ *
+ * @property base_stat - The base value for this stat.
+ * @property effort - Effort value (EV) yielded when this Pokémon is defeated.
+ * @property stat - Reference to the stat definition (name, url).
+ */
+type PokemonStat = {
+  base_stat: number;
+  effort: number;
+  stat: {
+    name: string;
+    url: string;
+  };
+};
+
+/**
+ * A type slot from the PokeAPI pokemon types array.
+ *
+ * @property slot - Order of this type (1 or 2 for dual-type Pokémon).
+ * @property type - Reference to the type definition (name, url).
+ */
+type PokemonType = {
+  slot: number;
+  type: {
+    name: string;
+    url: string;
+  };
 };
