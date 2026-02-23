@@ -54,22 +54,6 @@ export class PokeAPI {
   }
 
   /**
-   * Fetches a single resource by name from the given API path segment.
-   *
-   * @param pathSegment - API path (e.g. "location-area", "pokemon").
-   * @param name - The resource name.
-   * @returns The fetched resource.
-   * @template T - Expected shape of the JSON response.
-   */
-  static async #fetchResourceByName<T>(
-    pathSegment: string,
-    name: string,
-  ): Promise<T> {
-    const url = `${PokeAPI.baseURL}/${pathSegment}/${name}`;
-    return PokeAPI.#fetchWithCache<T>(url);
-  }
-
-  /**
    * Looks up a cached response by URL.
    *
    * @param url - Cache key (the request URL).
@@ -107,12 +91,13 @@ export class PokeAPI {
   /**
    * Fetches a paginated list of location areas from the PokeAPI.
    *
-   * Successful responses are cached by URL; repeated requests for the same URL
-   * return the cached result until the entry expires (see {@link CACHE_TTL_MS}).
+   * Validates pageURL when provided, builds the request URL, and fetches via cache.
+   * Successful responses are cached by URL until entry expiry (see {@link CACHE_TTL_MS}).
    *
    * @param pageURL - Optional full URL for a specific page (e.g. `next` or `previous` from a prior response).
    *                  If omitted, fetches the first page.
    * @returns Paginated location areas (count, next/previous URLs, and results array).
+   * @throws {Error} When pageURL is provided but not a string.
    * @throws {Error} When the HTTP response is not OK (e.g. 404, 500).
    * @example
    * const api = new PokeAPI();
@@ -130,6 +115,8 @@ export class PokeAPI {
   /**
    * Fetches details for a single location area by name.
    *
+   * Validates the location name, builds the request URL, and fetches via cache.
+   *
    * @param locationName - The location area name (e.g. "canalave-city-area").
    * @returns The location area details.
    * @throws {Error} When locationName is not a string (e.g. no args provided).
@@ -140,11 +127,14 @@ export class PokeAPI {
    */
   async fetchLocation(locationName: unknown): Promise<ShallowLocation> {
     const name = PokeAPI.#validateResourceName(locationName, "locationName");
-    return PokeAPI.#fetchResourceByName<ShallowLocation>("location-area", name);
+    const url = `${PokeAPI.baseURL}/location-area/${name}`;
+    return PokeAPI.#fetchWithCache<ShallowLocation>(url);
   }
 
   /**
    * Fetches details for a single Pokémon by name.
+   *
+   * Validates the Pokémon name, builds the request URL, and fetches via cache.
    *
    * @param pokemonName - The Pokémon name (e.g. "pikachu", "charizard").
    * @returns The Pokémon details.
@@ -156,7 +146,8 @@ export class PokeAPI {
    */
   async fetchPokemon(pokemonName: unknown): Promise<ShallowPokemon> {
     const name = PokeAPI.#validateResourceName(pokemonName, "pokemonName");
-    return PokeAPI.#fetchResourceByName<ShallowPokemon>("pokemon", name);
+    const url = `${PokeAPI.baseURL}/pokemon/${name}`;
+    return PokeAPI.#fetchWithCache<ShallowPokemon>(url);
   }
 }
 
