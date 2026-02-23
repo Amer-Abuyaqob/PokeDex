@@ -70,6 +70,6 @@ export async function commandCatch(state: State): Promise<void> {
     catchPokemon(pokemon, state);
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
-    console.error("Error:", message);
+    console.error("Error:", message + "\n");
   }
 }

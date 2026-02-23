@@ -58,6 +58,6 @@ export async function commandExplore(state: State): Promise<void> {
     printExploreResult(locationName, data.pokemon_encounters);
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
-    console.error("Error:", message);
+    console.error("Error:", message + "\n");
   }
 }

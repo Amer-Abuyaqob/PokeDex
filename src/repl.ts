@@ -75,7 +75,7 @@ async function executeCommand(state: State, tokens: string[]): Promise<void> {
     await command.callback(state);
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
-    console.error("Error:", message);
+    console.error("Error:", message + "\n");
   }
 }
 
