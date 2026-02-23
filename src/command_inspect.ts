@@ -34,6 +34,7 @@ function printPokemonInfo(pokemon: ShallowPokemon | undefined): void {
   for (const t of pokemon.types) {
     console.log(`  - ${t.type.name}`);
   }
+  console.log("");
 }
 
 /**
@@ -51,7 +52,7 @@ function printPokemonInfo(pokemon: ShallowPokemon | undefined): void {
 export async function commandInspect(state: State): Promise<void> {
   const pokemonName = getPokemonName(state.args);
   if (pokemonName === undefined) {
-    console.error("Error: inspect requires a pokemon name");
+    console.error("Error: inspect requires a pokemon name\n");
     return;
   }
   const pokemon = state.pokeDex[pokemonName];
