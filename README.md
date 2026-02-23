@@ -32,12 +32,12 @@ Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon dat
 
 ## 📊 Implementation Status
 
-| Component        | Status   | Description                                                                      |
-| ---------------- | -------- | -------------------------------------------------------------------------------- |
-| Project scaffold | Complete | TypeScript setup, package.json, tsconfig                                         |
-| REPL             | Complete | Interactive read-eval-print loop with shared state for pagination                |
-| PokeAPI client   | Complete | `fetchLocations`, `fetchLocation`, `fetchPokemon`; cached                        |
-| Cache            | Complete | In-memory PokeAPI response cache with TTL and reap loop                          |
+| Component        | Status   | Description                                                                        |
+| ---------------- | -------- | ---------------------------------------------------------------------------------- |
+| Project scaffold | Complete | TypeScript setup, package.json, tsconfig                                           |
+| REPL             | Complete | Interactive read-eval-print loop with shared state for pagination                  |
+| PokeAPI client   | Complete | `fetchLocations`, `fetchLocation`, `fetchPokemon`; cached                          |
+| Cache            | Complete | In-memory PokeAPI response cache with TTL and reap loop                            |
 | Pokedex CLI      | Partial  | `help`, `exit`, `map`, `mapb`, `explore`, `catch`, `inspect` done; pokedex pending |
 
 ---
