@@ -38,7 +38,8 @@ function catchPokemon(pokemon: ShallowPokemon, state: State): void {
 
   const caught = attemptCatch(base_experience);
   if (caught) {
-    console.log(`${name} was caught!\n`);
+    console.log(`${name} was caught!`);
+    console.log("You may now inspect it with the inspect command.\n");
     state.pokeDex[name] = pokemon;
   } else {
     console.log(`${name} escaped!\n`);
@@ -60,7 +61,7 @@ function catchPokemon(pokemon: ShallowPokemon, state: State): void {
 export async function commandCatch(state: State): Promise<void> {
   const pokemonName = getPokemonName(state.args);
   if (pokemonName === undefined) {
-    console.error("Error: catch requires a pokemon name");
+    console.error("Error: catch requires a pokemon name\n");
     return;
   }
 
