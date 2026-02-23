@@ -11,6 +11,7 @@ import { commandMap } from "./command_map.js";
 import { commandMapb } from "./command_mapb.js";
 import { commandCatch } from "./command_catch.js";
 import { commandInspect } from "./command_inspect.js";
+import { commandPokeDex } from "./command_pokedex.js";
 
 /**
  * Snapshot of REPL context passed into each command when it runs.
@@ -108,6 +109,12 @@ function getCommands(): Record<string, CLICommand> {
       name: "inspect",
       description: "Displays details for a caught Pokemon",
       callback: commandInspect,
+    },
+
+    pokedex: {
+      name: "pokedex",
+      description: "Lists all Pokemon you have caught",
+      callback: commandPokeDex,
     },
   };
 }

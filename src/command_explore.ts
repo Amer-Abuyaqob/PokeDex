@@ -49,7 +49,7 @@ function printExploreResult(
 export async function commandExplore(state: State): Promise<void> {
   const locationName = getLocationName(state.args);
   if (locationName === undefined) {
-    console.error("Error: explore requires a location name");
+    console.error("Error: explore requires a location name\n");
     return;
   }
 
