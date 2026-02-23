@@ -38,10 +38,10 @@ function catchPokemon(pokemon: ShallowPokemon, state: State): void {
 
   const caught = attemptCatch(base_experience);
   if (caught) {
-    console.log(`${name} was caught!`);
+    console.log(`${name} was caught!\n`);
     state.pokeDex[name] = pokemon;
   } else {
-    console.log(`${name} escaped!`);
+    console.log(`${name} escaped!\n`);
   }
 }
 
