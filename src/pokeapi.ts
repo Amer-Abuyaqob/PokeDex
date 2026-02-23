@@ -210,7 +210,7 @@ export type ShallowEncounter = {
  * @property base_experience - Base experience points yielded when defeated.
  * @property height - Height in decimetres.
  * @property weight - Weight in hectograms.
- * @property states - Base stats (hp, attack, defense, etc.) and effort values.
+ * @property stats - Base stats (hp, attack, defense, etc.) and effort values.
  * @property types - Type slots (e.g. electric, fire) and their order.
  */
 export type ShallowPokemon = {
@@ -218,7 +218,7 @@ export type ShallowPokemon = {
   base_experience: number;
   height: number;
   weight: number;
-  states: PokemonState[];
+  stats: PokemonStat[];
   types: PokemonType[];
 };
 
@@ -227,12 +227,12 @@ export type ShallowPokemon = {
  *
  * @property base_stat - The base value for this stat.
  * @property effort - Effort value (EV) yielded when this Pokémon is defeated.
- * @property state - Reference to the stat definition (name, url).
+ * @property stat - Reference to the stat definition (name, url).
  */
-type PokemonState = {
+type PokemonStat = {
   base_stat: number;
   effort: number;
-  state: {
+  stat: {
     name: string;
     url: string;
   };
