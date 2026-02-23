@@ -38,7 +38,7 @@ Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon dat
 | REPL             | Complete | Interactive read-eval-print loop with shared state for pagination                |
 | PokeAPI client   | Complete | `fetchLocations`, `fetchLocation`, `fetchPokemon`; cached                        |
 | Cache            | Complete | In-memory PokeAPI response cache with TTL and reap loop                          |
-| Pokedex CLI      | Partial  | `help`, `exit`, `map`, `mapb`, `explore`, `catch` done; inspect, pokedex pending |
+| Pokedex CLI      | Partial  | `help`, `exit`, `map`, `mapb`, `explore`, `catch`, `inspect` done; pokedex pending |
 
 ---
 
@@ -80,7 +80,7 @@ Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon dat
 | `mapb`    | Complete | Show previous 20 location-area names |
 | `explore` | Complete | Explore a location for Pokemon       |
 | `catch`   | Complete | Attempt to catch a Pokemon by name   |
-| `inspect` | Pending  | Inspect a caught Pokemon             |
+| `inspect` | Complete | Inspect a caught Pokemon             |
 | `pokedex` | Pending  | List all caught Pokemon              |
 
 ---
@@ -118,6 +118,7 @@ Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon dat
 - `src/command_mapb.ts` - `mapb` command (backward pagination)
 - `src/command_explore.ts` - `explore` command (Pokemon at a location area)
 - `src/command_catch.ts` - `catch` command (attempt to catch a Pokemon by name)
+- `src/command_inspect.ts` - `inspect` command (display details for a caught Pokemon)
 
 **Features**:
 
@@ -158,7 +159,7 @@ Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon dat
 - HTTP client for PokeAPI v2
 - `fetchLocations(pageURL?)` - Paginated location-area list (20 per page), cached by URL (5 min TTL)
 - `fetchLocation(name)` - Single location-area details with `pokemon_encounters`, cached
-- `fetchPokemon(name)` - Single Pokémon details (name, base_experience), cached
+- `fetchPokemon(name)` - Single Pokémon details (name, base_experience, height, weight, stats, types), cached
 - `#validateResourceName`, `#fetchResourceByName`, `#fetchWithCache<T>` - Private helpers
 
 **Example Usage**:
@@ -169,7 +170,7 @@ npm run build
 npm start
 ```
 
-Then type `help`, `map`, `mapb`, `explore <location>`, `catch <pokemon>`, or `exit` in the REPL. Use `map` / `mapb` to paginate locations; use `explore oreburgh-mine-b1f` to list Pokémon at a location; use `catch pikachu` to attempt a catch. Or use `npm run dev` to build and run in one step.
+Then type `help`, `map`, `mapb`, `explore <location>`, `catch <pokemon>`, `inspect <pokemon>`, or `exit` in the REPL. Use `map` / `mapb` to paginate locations; use `explore oreburgh-mine-b1f` to list Pokémon at a location; use `catch pikachu` to attempt a catch; use `inspect pidgey` to view a caught Pokémon's details. Or use `npm run dev` to build and run in one step.
 
 ---
 
@@ -177,7 +178,7 @@ Then type `help`, `map`, `mapb`, `explore <location>`, `catch <pokemon>`, or `ex
 
 ### 4.1 Pokedex Module
 
-- [ ] Remaining commands (`inspect`, `pokedex`) — `help`, `exit`, `map`, `mapb`, `explore`, `catch` are done.
+- [ ] Remaining command (`pokedex`) — `help`, `exit`, `map`, `mapb`, `explore`, `catch`, `inspect` are done.
 - [x] In-memory storage for caught Pokemon (`state.pokeDex`).
 
 ---
@@ -245,7 +246,7 @@ For detailed architecture, see [PROJECT_DESC.md](PROJECT_DESC.md).
 | [x] `map` / `mapb` commands          | Complete |
 | [x] `explore` command                | Complete |
 | [x] `catch` command                  | Complete |
-| [ ] `inspect` command                | Pending  |
+| [x] `inspect` command                | Complete |
 | [ ] `pokedex` command                | Pending  |
 
 ---
@@ -257,7 +258,7 @@ For detailed architecture, see [PROJECT_DESC.md](PROJECT_DESC.md).
 1. [x] **REPL (Chapter 1)** - Implement interactive read-eval-print loop. ✅ Done
 2. [x] **PokeAPI integration** - fetchLocations for map/mapb. ✅ Done
 3. [x] **Cache (Chapter 2)** - Implement in-memory PokeAPI response cache. ✅ Done
-4. [ ] **Pokedex (Chapter 3)** - Implement `inspect`, `pokedex`; `explore`, `catch` done.
+4. [ ] **Pokedex (Chapter 3)** - Implement `pokedex`; `explore`, `catch`, `inspect` done.
 
 ### Reference
 
@@ -274,4 +275,4 @@ For detailed architecture, see [PROJECT_DESC.md](PROJECT_DESC.md).
 
 **License**: ISC
 
-**Last Updated**: `catch` command implemented. PokeAPI `fetchPokemon` fetches Pokémon details; `state.pokeDex` stores caught Pokémon. Remaining commands: `inspect`, `pokedex`.
+**Last Updated**: `inspect` command implemented. Displays caught Pokémon details (name, height, weight, stats, types). `ShallowPokemon` extended with `height`, `weight`, `stats`, `types`. Remaining command: `pokedex`.
