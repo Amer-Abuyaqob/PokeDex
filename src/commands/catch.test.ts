@@ -1,8 +1,8 @@
-import { commandCatch } from "./command_catch.js";
-import type { ShallowPokemon } from "./pokeapi.js";
-import { initState } from "./state.js";
-import type { State } from "./state.js";
-import { PokeAPI } from "./pokeapi.js";
+import { commandCatch } from "./catch.js";
+import type { ShallowPokemon } from "../lib/pokeapi.js";
+import { initState } from "../state.js";
+import type { State } from "../state.js";
+import { PokeAPI } from "../lib/pokeapi.js";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 // ---------------------------------------------------------------------------

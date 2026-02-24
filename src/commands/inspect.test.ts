@@ -1,6 +1,6 @@
-import { commandInspect } from "./command_inspect.js";
-import type { ShallowPokemon } from "./pokeapi.js";
-import { initState } from "./state.js";
+import { commandInspect } from "./inspect.js";
+import type { ShallowPokemon } from "../lib/pokeapi.js";
+import { initState } from "../state.js";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
 // ---------------------------------------------------------------------------

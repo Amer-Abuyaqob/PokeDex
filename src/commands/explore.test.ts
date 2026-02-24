@@ -1,5 +1,5 @@
-import { commandExplore } from "./command_explore.js";
-import type { State } from "./state.js";
+import { commandExplore } from "./explore.js";
+import type { State } from "../state.js";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
 // ---------------------------------------------------------------------------

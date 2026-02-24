@@ -1,6 +1,6 @@
-import { commandMapb } from "./command_mapb.js";
-import type { ShallowLocations } from "./pokeapi.js";
-import type { State } from "./state.js";
+import { commandMapb } from "./mapb.js";
+import type { ShallowLocations } from "../lib/pokeapi.js";
+import type { State } from "../state.js";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 // ---------------------------------------------------------------------------

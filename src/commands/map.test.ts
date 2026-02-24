@@ -1,6 +1,6 @@
-import { commandMap } from "./command_map.js";
-import type { ShallowLocations } from "./pokeapi.js";
-import type { State } from "./state.js";
+import { commandMap } from "./map.js";
+import type { ShallowLocations } from "../lib/pokeapi.js";
+import type { State } from "../state.js";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 // ---------------------------------------------------------------------------
