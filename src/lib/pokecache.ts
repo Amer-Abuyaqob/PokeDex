@@ -42,7 +42,6 @@ export class Cache {
     this.#startReapLoop();
   }
 
-
   /**
    * Stores a value in the cache under the given key.
    *
