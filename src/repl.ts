@@ -90,6 +90,20 @@ function isEmptyInput(tokens: string[]): boolean {
 }
 
 /**
+ * Parses input, checks for empty input, and executes the command if non-empty.
+ * Used for testing the REPL without spawning the interactive loop.
+ *
+ * @param state - Shared REPL state passed to the command callback
+ * @param input - Raw user input string (e.g. "help" or "catch pikachu")
+ * @returns Promise resolving when the command finishes
+ */
+export async function runCommand(state: State, input: string): Promise<void> {
+  const tokens = cleanInput(input);
+  if (isEmptyInput(tokens)) return;
+  await executeCommand(state, tokens);
+}
+
+/**
  * Starts the Read-Eval-Print Loop (REPL) for the Pokedex CLI.
  *
  * Starts the interactive prompt and routes each input line to a command handler.
