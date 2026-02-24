@@ -1,4 +1,4 @@
-import type { State } from "./state.js";
+import type { State } from "../state.js";
 
 /**
  * Lists all Pokémon caught by the user.

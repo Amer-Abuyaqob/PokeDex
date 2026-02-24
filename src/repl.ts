@@ -75,7 +75,7 @@ async function executeCommand(state: State, tokens: string[]): Promise<void> {
     await command.callback(state);
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
-    console.error("Error:", message);
+    console.error("Error:", message + "\n");
   }
 }
 
@@ -87,6 +87,20 @@ async function executeCommand(state: State, tokens: string[]): Promise<void> {
  */
 function isEmptyInput(tokens: string[]): boolean {
   return tokens.length < 1;
+}
+
+/**
+ * Parses input, checks for empty input, and executes the command if non-empty.
+ * Used for testing the REPL without spawning the interactive loop.
+ *
+ * @param state - Shared REPL state passed to the command callback
+ * @param input - Raw user input string (e.g. "help" or "catch pikachu")
+ * @returns Promise resolving when the command finishes
+ */
+export async function runCommand(state: State, input: string): Promise<void> {
+  const tokens = cleanInput(input);
+  if (isEmptyInput(tokens)) return;
+  await executeCommand(state, tokens);
 }
 
 /**

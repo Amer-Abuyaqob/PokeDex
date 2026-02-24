@@ -1,5 +1,5 @@
-import type { ShallowPokemon } from "./pokeapi.js";
-import type { State } from "./state.js";
+import type { ShallowPokemon } from "../lib/pokeapi.js";
+import type { State } from "../state.js";
 
 /**
  * Extracts the Pokémon name from command args.
@@ -70,6 +70,6 @@ export async function commandCatch(state: State): Promise<void> {
     catchPokemon(pokemon, state);
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
-    console.error("Error:", message);
+    console.error("Error:", message + "\n");
   }
 }
