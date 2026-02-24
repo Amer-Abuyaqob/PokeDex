@@ -3,15 +3,17 @@ import {
   type Interface as ReadlineInterface,
 } from "node:readline";
 import { stdin, stdout } from "node:process";
-import { commandHelp } from "./command_help.js";
-import { commandExit } from "./command_exit.js";
-import { PokeAPI, type ShallowPokemon } from "./pokeapi.js";
-import { commandExplore } from "./command_explore.js";
-import { commandMap } from "./command_map.js";
-import { commandMapb } from "./command_mapb.js";
-import { commandCatch } from "./command_catch.js";
-import { commandInspect } from "./command_inspect.js";
-import { commandPokeDex } from "./command_pokedex.js";
+import {
+  commandCatch,
+  commandExit,
+  commandExplore,
+  commandHelp,
+  commandInspect,
+  commandMap,
+  commandMapb,
+  commandPokeDex,
+} from "./commands/index.js";
+import { PokeAPI, type ShallowPokemon } from "./lib/pokeapi.js";
 
 /**
  * Snapshot of REPL context passed into each command when it runs.
