@@ -1,5 +1,5 @@
-import type { ShallowEncounter } from "./pokeapi.js";
-import type { State } from "./state.js";
+import type { ShallowEncounter } from "../lib/pokeapi.js";
+import type { State } from "../state.js";
 
 /**
  * Extracts the location name from command args.

@@ -1,4 +1,4 @@
-import type { State } from "./state.js";
+import type { State } from "../state.js";
 
 /**
  * Prints up to 20 location-area names from the PokeAPI, with pagination support.

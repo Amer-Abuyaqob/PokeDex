@@ -1,5 +1,5 @@
-import type { ShallowPokemon } from "./pokeapi.js";
-import type { State } from "./state.js";
+import type { ShallowPokemon } from "../lib/pokeapi.js";
+import type { State } from "../state.js";
 
 /**
  * Extracts the Pokémon name from command args.
