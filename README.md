@@ -1,6 +1,6 @@
 # PokeDex CLI (TypeScript)
 
-> 🚧 **Under Construction** – This project is actively being developed. Some features are complete, while others are still in progress. See the [Implementation Status](#implementation-status) section for details.
+> ✅ **Ready to use** – All features are complete. Run `npm start` to try it.
 
 Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon data from [PokeAPI](https://pokeapi.co/) with in-memory caching. Built as part of the Boot.dev course [Build a Pokedex in TypeScript](https://www.boot.dev/courses/build-pokedex-cli-typescript).
 
@@ -20,6 +20,7 @@ Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon dat
   - [3.3 Cache Module (Chapter 2)](#33-cache-module-chapter-2)
   - [3.4 PokeAPI Module](#34-pokeapi-module)
 - [4. Pending Modules](#4--pending-modules)
+  - [4.1 Pokedex Module](#41-pokedex-module)
 - [5. Build & Run Instructions](#5--build--run-instructions)
   - [5.1 Prerequisites](#51-prerequisites)
   - [5.2 Install and Run](#52-install-and-run)
@@ -112,14 +113,15 @@ Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon dat
 
 - `src/repl.ts` - Core REPL logic (cleanInput, executeCommand, startREPL)
 - `src/state.ts` - State type, CLICommand type, initState, command registry; includes pokeDex for caught Pokémon
-- `src/command_help.ts` - `help` command
-- `src/command_exit.ts` - `exit` command
-- `src/command_map.ts` - `map` command (forward pagination)
-- `src/command_mapb.ts` - `mapb` command (backward pagination)
-- `src/command_explore.ts` - `explore` command (Pokemon at a location area)
-- `src/command_catch.ts` - `catch` command (attempt to catch a Pokemon by name)
-- `src/command_inspect.ts` - `inspect` command (display details for a caught Pokemon)
-- `src/command_pokedex.ts` - `pokedex` command (list all caught Pokemon)
+- `src/commands/help.ts` - `help` command
+- `src/commands/exit.ts` - `exit` command
+- `src/commands/map.ts` - `map` command (forward pagination)
+- `src/commands/mapb.ts` - `mapb` command (backward pagination)
+- `src/commands/explore.ts` - `explore` command (Pokemon at a location area)
+- `src/commands/catch.ts` - `catch` command (attempt to catch a Pokemon by name)
+- `src/commands/inspect.ts` - `inspect` command (display details for a caught Pokemon)
+- `src/commands/pokedex.ts` - `pokedex` command (list all caught Pokemon)
+- `src/commands/*.test.ts` - Vitest unit tests for each command (catch, explore, inspect, map, mapb, pokedex)
 
 **Features**:
 
@@ -137,8 +139,8 @@ Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon dat
 
 **Files**:
 
-- `src/pokecache.ts` - Cache class, CacheEntry type
-- `src/pokecache.test.ts` - Vitest tests for add/get and TTL reaping
+- `src/lib/pokecache.ts` - Cache class, CacheEntry type
+- `src/lib/pokecache.test.ts` - Vitest tests for add/get and TTL reaping
 
 **Features**:
 
@@ -153,7 +155,7 @@ Interactive terminal Pokedex CLI in TypeScript - a REPL that fetches Pokemon dat
 
 **Files**:
 
-- `src/pokeapi.ts` - PokeAPI client, `fetchLocations`, `fetchLocation`, `fetchPokemon`, `ShallowLocation` / `ShallowLocations` / `ShallowPokemon` types
+- `src/lib/pokeapi.ts` - PokeAPI client, `fetchLocations`, `fetchLocation`, `fetchPokemon`, `ShallowLocation` / `ShallowLocations` / `ShallowPokemon` types
 
 **Features**:
 
@@ -276,4 +278,4 @@ For detailed architecture, see [PROJECT_DESC.md](PROJECT_DESC.md).
 
 **License**: ISC
 
-**Last Updated**: `pokedex` command implemented. Lists all caught Pokémon or shows "Your Pokedex is empty." MVP complete — all commands done.
+**Last Updated**: Refactored structure (commands in `src/commands/`, lib in `src/lib/`). Added Vitest unit tests for all commands (catch, explore, inspect, map, mapb, pokedex). Full test suite: 68 tests.
