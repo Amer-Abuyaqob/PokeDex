@@ -35,6 +35,9 @@ Thumbs.db
 coverage/
 .nyc_output/
 
+# Personal (drafts, etc.)
+personal/
+
 # Misc
 *.tgz
 PR.md
